@@ -10,6 +10,46 @@ def insertion_sort(array):
         array[i] = current
 
 
+def binary_insertion_sort(array):
+    """
+    Insertion sort variant which uses binary search to find
+    the insertion site of the currently sorted element.
+    """
+    if len(array) < 2:
+        return
+    for i in range(1, len(array)):
+        # find insertion site for the current element
+        key = array[i]
+        insertion_site = find_insertion_site(array[:i + 1], key)
+        # shift elements to the right of the insertion site
+        for j in range(i, insertion_site - 1,  -1):
+            array[j] = array[j - 1]
+        # insert element
+        array[insertion_site] = key
+
+
+def find_insertion_site(array, x):
+    """"
+    Find the insertion site for x in a sorted array so that the
+    array stays sorted after insertion
+    """
+    if len(array) == 1:
+        if x > array[0]:
+            return 1
+        return 0
+
+    # binary search
+    low = 0
+    high = len(array) - 1
+    while low < high:
+        mid = (low + high - 1) // 2
+        if x >= array[mid]:
+            low = mid + 1
+        else:
+            high = mid
+    return low
+
+
 def selection_sort(array):
     for i in range(len(array)):
         mini = i
