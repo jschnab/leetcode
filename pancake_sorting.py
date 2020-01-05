@@ -1,5 +1,8 @@
 # script which performs pancake sorting
 
+from random import randint
+
+
 def pancake_sorting(A: list) -> list:
     """Sorts a list using pancake sorting."""
     l = len(A)
@@ -18,3 +21,8 @@ def pancake_sorting(A: list) -> list:
 
     return A
 
+
+if __name__ == "__main__":
+    A = [randint(0, 100) for _ in range(5)]
+    print("Input: ", A)
+    print("Output: ", pancake_sorting(A))
