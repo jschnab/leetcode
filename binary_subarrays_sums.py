@@ -14,5 +14,5 @@ def bin_subarray_sum(array, S):
     for x in L:
         answer += counter.get(x - S, 0)
         counter[x] = counter.get(x, 0) + 1
-    
+
     return answer

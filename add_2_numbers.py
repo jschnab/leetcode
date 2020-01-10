@@ -19,7 +19,7 @@ class Solution(object):
             else: x = 0
             if l2: y = l2.val
             else: y = 0
-        
+
             # calculate sum and carry
             S = x + y + carry
             carry = S // 10
