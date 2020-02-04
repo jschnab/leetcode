@@ -191,6 +191,65 @@ def remove_leaf_nodes_iter(root, target):
     return head.left
 
 
+def same_tree_iter(p, q):
+    """
+    Checks if two binary trees are identical, iterative algorithm.
+
+    Time complexity: O(N)
+    Space complexity: O(logN) if balanced tree, O(N) worst case of completely
+    unbalanced tree (keep a stack).
+
+    :param TreeNode p: root of tree 1
+    :param TreeNode q: root of tree 2
+    :return bool: True if trees are identical else False
+    """
+    # helper function to check the identity of two nodes
+    def check(p, q):
+        if not p and not q:
+            return True
+        if not p or not q:
+            return False
+        if p.val != q.val:
+            return False
+        return True
+
+    # iterate throught the tree and check each pair of nodes
+    # use DFS
+    stack = []
+    stack.append((p, q))
+    while stack:
+        p, q = stack.pop()
+        if not check(p, q):
+            return False
+        # if check is True both p and q exist
+        if p:
+            stack.append((p.left, q.left))
+            stack.append(p.right, q.right))
+
+    return True
+
+
+def same_tree_rec(p, q):
+    """
+    Checks if two binary trees are identical, recursive algorithm.
+
+    Time complexity: O(N)
+    Space complexity: O(logN) if balanced tree, O(N) worst case of a completely
+    unbalanced tree (to keep recursion stack).
+
+    :param TreeNode p: root of tree 1
+    :param TreeNode q: root of tree 2
+    :return bool: True if trees are identical else False
+    """
+    if not p and not q:
+        return True
+    if not p or not q:
+        return False
+    if p.val != q.val:
+        return False
+    return same_tree_rec(p.left, q.left) and same_tree_rec(p.right, q.right)
+
+
 if __name__ == "__main__":
     root = TreeNode(6)
     root.left = TreeNode(7)
