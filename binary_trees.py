@@ -224,7 +224,7 @@ def same_tree_iter(p, q):
         # if check is True both p and q exist
         if p:
             stack.append((p.left, q.left))
-            stack.append(p.right, q.right))
+            stack.append((p.right, q.right))
 
     return True
 
@@ -250,16 +250,51 @@ def same_tree_rec(p, q):
     return same_tree_rec(p.left, q.left) and same_tree_rec(p.right, q.right)
 
 
+def is_valid_tree_recur(n, left_children, right_children):
+    """
+    Leetcode problem 1361
+    We have n binary tree nodes from 0 to n - 1 where node i has two children
+    left_children[i] and right_children[i]. Return True if and only if all
+    nodes form exactly one valid binary tree.
+
+    :param int n: number of nodes
+    :param list[int] left_children: left children of tree nodes
+    :param list[int] right_children: right children of tree nodes
+    :return bool: True if binary tree is valid
+    """
+    def dfs(i):
+        if i in visited:
+            return False
+        if i == -1:
+            return True
+        visited.add(i)
+        return dfs(left_children[i]) and dfs(right_children[i])
+
+    visited = set()
+    return dfs(0) and len(visited) == n
+
+
+def is_valid_tree_iter(n, left_children, right_children):
+    """
+    Leetcode problem 1361
+    See docstring of `is_valid_tree_recur()`.
+    """
+    # we use DFS with a list, but could use BFS with queue
+    stack = [0]
+    visited = set()
+    while stack:
+        current = stack.pop()
+        if current in visited:
+            return False
+        visited.add(current)
+        if left_children[current] != -1:
+            stack.append(left_children[current])
+        if right_children[current] != -1:
+            stack.append(right_children[current])
+    if len(visited) != n:
+        return False
+    return True
+
+
 if __name__ == "__main__":
-    root = TreeNode(6)
-    root.left = TreeNode(7)
-    root.right = TreeNode(8)
-    root.left.left = TreeNode(2)
-    root.left.right = TreeNode(7)
-    root.right.left = TreeNode(1)
-    root.right.right = TreeNode(3)
-    root.left.left.left = TreeNode(9)
-    root.left.right.left = TreeNode(1)
-    root.left.right.right = TreeNode(4)
-    root.right.right.right = TreeNode(5)
-    assert sum_nodes_even_grandparents(root) == 18
+    pass
