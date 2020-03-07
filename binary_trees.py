@@ -296,5 +296,52 @@ def is_valid_tree_iter(n, left_children, right_children):
     return True
 
 
+def list_in_tree(head, root):
+    """
+    Leetcode problem 1367
+    Given a binary tree 'root' and a linked list 'head', return True if
+    all nodes of the linked list correspond to some downward path (connected)
+    in the tree. Otherwise, return False.
+
+    We will have a helper function which finds the linked list in the tree,
+    and the main function explores the tree and calls the helper function
+    at every node of the tree.
+
+    Time complexity: O(N * min(L, H)
+    Space complexity: O(H)
+    where N = tree size, H = tree height, L = list length
+    """
+    def helper(head, root):
+        """
+        Helper function which finds a connected downward path corresponding to
+        the linked list in the tree.
+        """
+        # if we went through the whole list, we found the path
+        if not head:
+            return True
+
+        # if we reach the end of a subtree without finding a correspondance
+        # with the list
+        if not root:
+            return False
+
+        # the current nodes from the list and tree match, as well as subsequent
+        # nodes from the left or right subtree
+        return head.val == root.val and (
+            dfs(head.next, root.left) or dfs(head.next, root.right)
+        )
+
+    if not head:
+        return True
+    if not root:
+        return False
+
+    # call dfs to check if the list and tree correspond from the current node
+    # otherwise check for correspondance from either left or right subtree
+    return dfs(head, root) \
+        or list_in_tree(head, root.left) \
+        or list_in_tree(head, root.right)
+
+
 if __name__ == "__main__":
     pass
