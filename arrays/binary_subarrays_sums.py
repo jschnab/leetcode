@@ -16,3 +16,12 @@ def bin_subarray_sum(array, S):
         counter[x] = counter.get(x, 0) + 1
 
     return answer
+
+
+def test1():
+    assert bin_subarray_sum([1,0,1,0,1], 2) == 4
+    print("test 1 successful")
+
+
+if __name__ == "__main__":
+    test1()
