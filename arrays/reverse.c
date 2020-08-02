@@ -2,7 +2,10 @@
 #include <string.h>
 
 
-/* reverse a string provided as a command line argument */
+/* reverse a string provided as a command line argument
+ * time complexity: O(n) two pointers start from string ends and meet
+ * space complexity: O(1) the string is reversed in place
+ */
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("usage: ./reverse <word>\n");

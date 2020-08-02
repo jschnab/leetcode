@@ -4,7 +4,10 @@
 
 
 /* given a string, replace the space between words with %20 assume that there
- * is enough space on the right to accomodate characters */
+ * is enough space on the right to accomodate characters
+ * time complexity: O(n) we iterate once through the matrix
+ * space complexity: O(1) we update the input matrix by sliding characters
+ */
 
 
 void replace_space(char *s);

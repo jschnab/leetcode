@@ -8,9 +8,9 @@ void itoa(char *, int);
 
 /* basic string compression, replace repetitions of a character with an
  * integer which defines the number of repetitions
- * time complexity: O(n)
- * space complexity: O(n) */
-
+ * time complexity: O(n) we iterate once through the input string
+ * space complexity: O(n) we generate a new string to store the compressed one
+ */
 int main(int argc, char *argv[]) {
     char s[] = "aabcccccaaa";
     //char s[] = "abcdefghijk";

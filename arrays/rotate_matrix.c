@@ -6,6 +6,8 @@
 /* this problem is from the book "cracking the code interview"
  * even if one has not matrix operations knowledge, it's easy
  * to derive a rule by drawing small matrices and generalize
+ * time complexity: O(n) we iterate once through the matrix
+ * space complexity: O(n) we create a new rotated matrix
  */
 
 /* rotate a 2D NxN matrix by 90 degrees clockwise */

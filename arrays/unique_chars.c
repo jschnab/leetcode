@@ -8,7 +8,11 @@
 int has_unique(char *s);
 
 
-/* determine if input string has only unique characters */
+/* determine if input string has only unique characters
+ * time complexity: O(n) we iterate once through the string
+ * space complexity: O(1) we use an array to store counts, the size
+ * of the array is the same regarless of the input length
+ */
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("usage: ./unique_chars <string>\n");
