@@ -18,14 +18,14 @@ def valid_parentheses(string):
     :param str string: string to check the validity of
     :return bool: True if the string is valid else False
     """
-    pairs = {")": "(", "]": "[", "}": "{"}
+    brackets = {"(": ")", "[": "]", "{": "}"}
     stack = deque()
-    for i in string:
-        if i in pairs:
-            if stack.pop() != pairs[i]:
-                return False
+    for char in string:
+        if char in brackets:
+            stack.append(char)
         else:
-            stack.append(i)
+            it not stack or char != brackets[stack.pop()]:
+                return False
     return not stack
 
 
