@@ -12,6 +12,39 @@ class Node:
         self.next = next_
 
 
+def is_palindrome2(head):
+    """
+    Check if a linked list is a palindrome.
+
+    :param Node head: first node of the list
+    :returns: bool - True if list is palindrome else False
+    """
+    if not head:
+        return True
+    # position the slow "pointer" on the middle node
+    slow = head
+    fast = head
+    while fast.next:
+        slow = slow.next
+        fast = fast.next.next
+
+    # reverse the linkage of nodes after the middle node
+    reverse = None
+    while slow:
+        next_ = slow.next
+        slow.next = reverse
+        reverse = slow
+        slow = next_
+
+    # iterate from beginning and end and check node values for equality
+    while reverse:
+        if head.val != reverse.val:
+            return False
+        head = head.next
+        reverse = reverse.next
+    return True
+
+
 def is_palindrome(head):
     """
     :param Node head: first node of linked list
@@ -42,19 +75,19 @@ def is_palindrome(head):
 
 def test1():
     L = Node(1, Node(2, Node(3, Node(2, Node(1)))))
-    assert is_palindrome(L) is True
+    assert is_palindrome2(L) is True
     print("test 1 successful")
 
 
 def test2():
     L = Node(1, Node(2, Node(3, Node(4, Node(5)))))
-    assert is_palindrome(L) is False
+    assert is_palindrome2(L) is False
     print("test 2 successful")
 
 
 def test3():
     L = None
-    assert is_palindrome(L) is True
+    assert is_palindrome2(L) is True
     print("test 3 successful")
 
 
