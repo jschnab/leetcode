@@ -43,15 +43,11 @@ def sort_stack(stack):
     :param Stack stack: stack to sort
     """
     buf = Stack()
-    while stack:
-        i = 0
+    while not stack.is_empty:
         current = stack.pop()
-        while buf and current > buf.top:
+        while not buf.is_empty and current > buf.top:
             stack.push(buf.pop())
-            i += 1
         buf.push(current)
-        for _ in range(i):
-            buf.push(stack.pop())
     while buf:
         stack.push(buf.pop())
 
@@ -70,9 +66,17 @@ def test2():
     print("after sorting:", stack)
 
 
+def test3():
+    stack = Stack([5, 4, 3, 2, 1])
+    print("before sorting:", stack)
+    sort_stack(stack)
+    print("after sorting:", stack)
+
+
 def main():
     test1()
     test2()
+    test3()
 
 
 if __name__ == "__main__":
