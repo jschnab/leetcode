@@ -21,7 +21,7 @@ class TreeNode:
 def copy_node(node):
     if not node:
         return
-    return TreeNode(node.val, node.left, node.right)
+    return TreeNode(node.val, copy_node(node.left), copy_node(node.right))
 
 
 def merge(t1, t2):
@@ -33,6 +33,32 @@ def merge(t1, t2):
     new.left = merge(t1.left, t2.left)
     new.right = merge(t1.right, t2.right)
     return new
+
+
+def merge_iter(t1, t2):
+    if not t1 and not t2:
+        return
+    t = TreeNode()
+    stack = [(t, t1, t2)]
+    while stack:
+        n, n1, n2 = stack.pop()
+        if n1 or n2:
+            n.val = (n1.val if n1 else 0) + (n2.val if n2 else 0)
+            if (n1 and n1.right) or (n2 and n2.right):
+                n.right = TreeNode()
+                stack.append((
+                    n.right,
+                    n1.right if n1 else None,
+                    n2.right if n2 else None
+                ))
+            if (n1 and n1.left) or (n2 and n2.left):
+                n.left = TreeNode()
+                stack.append((
+                    n.left,
+                    n1.left if n1 else None,
+                    n2.left if n2 else None
+                ))
+    return t
 
 
 def tree_to_list(root, lst=None):
@@ -51,8 +77,8 @@ def test1():
         right=TreeNode(3, TreeNode(6), TreeNode(7))
     )
     lst = tree_to_list(root, [])
-    print(lst)
-
+    assert lst == [4, 2, 5, 1, 6, 3, 7]
+    print("test 1 successful")
 
 def test2():
     t1 = TreeNode(
@@ -60,20 +86,37 @@ def test2():
         left=TreeNode(3, TreeNode(5)),
         right=TreeNode(2)
     )
-    print("t1:", tree_to_list(t1, []))
     t2 = TreeNode(
         val=2,
         left=TreeNode(1, None, TreeNode(4)),
         right=TreeNode(3, None, TreeNode(7))
     )
-    print("t2:", tree_to_list(t2, []))
     t3 = merge(t1, t2)
-    print("t3:", tree_to_list(t3, []))
+    assert tree_to_list(t3, []) == [5, 4, 4, 3, 5, 7]
+    print("test 2 successful")
+
+
+def test3():
+    t1 = TreeNode(
+        val=1,
+        left=TreeNode(3, TreeNode(5)),
+        right=TreeNode(2)
+    )
+    t2 = TreeNode(
+        val=2,
+        left=TreeNode(1, None, TreeNode(4)),
+        right=TreeNode(3, None, TreeNode(7))
+    )
+    t3 = merge_iter(t1, t2)
+    assert tree_to_list(t3, []) == [5, 4, 4, 3, 5, 7]
+    print("test 3 successful")
+
 
 
 def main():
     test1()
     test2()
+    test3()
 
 
 if __name__ == "__main__":
