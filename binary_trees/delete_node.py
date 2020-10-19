@@ -48,50 +48,56 @@ def delete_iter(root, val):
     :param TreeNode root: root of the tree
     :param int val: value of the node to delete
     """
-    while root:
-        if val == root.val:
+    dummy = TreeNode(right=root)
+    prev = dummy
+    node = root
+    while node:
+        if val == node.val:
 
             # node to delete is leaf
-            if not root.left and not root.right:
-                if root == prev.right:
+            if not node.left and not node.right:
+                if node == prev.right:
                     prev.right = None
                 else:
                     prev.left = None
-                return
+                return dummy.right
 
             # node has right child
-            if not root.left:
-                if root == prev.right:
-                    prev.right = root.right
+            if not node.left:
+                if node == prev.right:
+                    prev.right = node.right
                 else:
-                    prev.left = root.right
-                return
+                    prev.left = node.right
+                return dummy.right
 
             # node has left child
-            if not root.right:
-                if root == prev.right:
-                    prev.right = root.left
+            if not node.right:
+                if node == prev.right:
+                    prev.right = node.left
                 else:
-                    prev.left = root.left
-                return
+                    prev.left = node.left
+                return dummy.right
 
             # node has left and right children
-            rightmost = find_rightmost(root.left)
-            rightmost.right = root.right
-            if root == prev.right:
+            rightmost = find_rightmost(node.left)
+            rightmost.left = delete_iter(node.left, rightmost.val)
+            rightmost.right = node.right
+            if node == prev.right:
                 prev.right = rightmost
             else:
                 prev.left = rightmost
-            return
+            return dummy.right
 
 
         # iteratively traverse the tree
-        elif val > root.val:
-            prev = root
-            root = root.right
-        elif val < root.val:
-            prev = root
-            root = root.left
+        elif val > node.val:
+            prev = node
+            node = node.right
+        elif val < node.val:
+            prev = node
+            node = node.left
+
+    return dummy.right
 
 
 def test1():
@@ -152,7 +158,7 @@ def test5():
             TreeNode(7)
         )
     )
-    delete_iter(root, 5)
+    root = delete_iter(root, 5)
     lst = tree_to_list(root)
     assert lst == [1, 2, 3, 4, 6, 7]
     print("test 5 successful")
@@ -172,7 +178,7 @@ def test6():
             TreeNode(7)
         )
     )
-    delete_iter(root, 3)
+    root = delete_iter(root, 3)
     lst = tree_to_list(root)
     assert lst == [1, 2, 4, 5, 6, 7]
     print("test 6 successful")
@@ -191,10 +197,17 @@ def test7():
             TreeNode(6, TreeNode(5)),
         )
     )
-    delete_iter(root, 7)
+    root = delete_iter(root, 7)
     lst = tree_to_list(root)
     assert lst == [1, 2, 3, 4, 5, 6]
     print("test 7 successful")
+
+
+def test7bis():
+    root = TreeNode(2)
+    root = delete_iter(root, 2)
+    assert root is None
+    print("test 7bis successful")
 
 
 def test8():
@@ -211,7 +224,7 @@ def test8():
             TreeNode(7)
         )
     )
-    delete_iter(root, 2)
+    root = delete_iter(root, 2)
     lst = tree_to_list(root)
     assert lst == [1, 3, 4, 5, 6, 7]
     print("test 8 successful")
@@ -231,10 +244,50 @@ def test9():
             TreeNode(7)
         )
     )
-    delete_iter(root, 6)
+    root = delete_iter(root, 6)
     lst = tree_to_list(root)
     assert lst == [1, 2, 3, 4, 5, 7]
     print("test 9 successful")
+
+
+def test10():
+    root = TreeNode(
+        4,
+        TreeNode(
+            2,
+            TreeNode(1),
+            TreeNode(3)
+        ),
+        TreeNode(
+            6,
+            TreeNode(5),
+            TreeNode(7)
+        )
+    )
+    root = delete_iter(root, 4)
+    lst = tree_to_list(root)
+    assert lst == [1, 2, 3, 5, 6, 7]
+    print("test 10 successful")
+
+
+def test11():
+    root = TreeNode(
+        4,
+        TreeNode(
+            2,
+            TreeNode(1),
+            TreeNode(3)
+        ),
+        TreeNode(
+            6,
+            TreeNode(5),
+            TreeNode(7)
+        )
+    )
+    root = delete_iter(root, -1)
+    lst = tree_to_list(root)
+    assert lst == [1, 2, 3, 4, 5, 6, 7]
+    print("test 11 successful")
 
 
 def main():
@@ -245,8 +298,11 @@ def main():
     test5()
     test6()
     test7()
+    test7bis()
     test8()
     test9()
+    test10()
+    test11()
 
 
 if __name__ == "__main__":
