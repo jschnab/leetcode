@@ -40,6 +40,40 @@ def find_rightmost(root):
     return root
 
 
+def delete_recur(root, val):
+    """
+    Delete a node with a certain value, if it exists, from the
+    tree having the given root.
+
+    :param TreeNode root: root of the tree
+    :param int val: value of the node to delete
+    """
+    if not root:
+        return
+
+    if root.val == val and not root.left and not root.right:
+        return
+
+    if root.val == val and root.left and not root.right:
+        return root.left
+
+    if root.val == val and not root.left and root.right:
+        return root.right
+
+    if root.val == val and root.left and root.right:
+        rightmost = find_rightmost(root.left)
+        root.val = rightmost.val
+        root.left = delete_recur(root.left, rightmost.val)
+        return root
+
+    if val < root.val:
+        root.left = delete_recur(root.left, val)
+    elif val > root.val:
+        root.right = delete_recur(root.right, val)
+
+    return root
+
+
 def delete_iter(root, val):
     """
     Delete a node with a certain value, if it exists, from the
@@ -290,6 +324,66 @@ def test11():
     print("test 11 successful")
 
 
+def test12():
+    root = TreeNode(
+        4,
+        TreeNode(
+            2,
+            TreeNode(1),
+            TreeNode(3)
+        ),
+        TreeNode(
+            6,
+            TreeNode(5),
+            TreeNode(7)
+        )
+    )
+    root = delete_recur(root, 1)
+    lst = tree_to_list(root)
+    assert lst == [2, 3, 4, 5, 6, 7]
+    print("test 12 successful")
+
+
+def test13():
+    root = TreeNode(
+        4,
+        TreeNode(
+            2,
+            TreeNode(1),
+            TreeNode(3)
+        ),
+        TreeNode(
+            6,
+            TreeNode(5),
+            TreeNode(7)
+        )
+    )
+    root = delete_recur(root, 7)
+    lst = tree_to_list(root)
+    assert lst == [1, 2, 3, 4, 5, 6]
+    print("test 13 successful")
+
+
+def test14():
+    root = TreeNode(
+        4,
+        TreeNode(
+            2,
+            TreeNode(1),
+            TreeNode(3)
+        ),
+        TreeNode(
+            6,
+            TreeNode(5),
+            TreeNode(7)
+        )
+    )
+    root = delete_recur(root, 4)
+    lst = tree_to_list(root)
+    assert lst == [1, 2, 3, 5, 6, 7]
+    print("test 14 successful")
+
+
 def main():
     test1()
     test2()
@@ -303,6 +397,9 @@ def main():
     test9()
     test10()
     test11()
+    test12()
+    test13()
+    test14()
 
 
 if __name__ == "__main__":
