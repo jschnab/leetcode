@@ -28,7 +28,7 @@ def long_pal(s):
 
     # we generate an n x n table to store where we found palindromes
     memo = [[0] * l for _ in range(l)]
-    
+
     # we first store 1-letter palindromes
     for i in range(l):
         memo[i][i] = 1
