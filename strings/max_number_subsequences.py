@@ -2,7 +2,7 @@
 leetcode 2207: Maximize number of subsequences in a string.
 
 We are given a string S and another string of length 2 P (the pattern).
-Both S and T only consists of lowercase english letters.
+Both S and P only consists of lowercase english letters.
 
 We can add either P[0] or P[1] at any index in S exactly once (including at
 the beginning and the end).
@@ -50,7 +50,7 @@ class MyString:
         return self.s[index - 1]
 
 
-def ncs_memo(x, y):
+def ncs_memo(x, y, verbose=False):
     """
     Number of common subsequences between two strings.
 
@@ -73,6 +73,10 @@ def ncs_memo(x, y):
             if x[i] == y[j]:
                 memo[i][j] += memo[i+1][j+1]
             memo[i][j] += memo[i+1][j]
+
+    if verbose:
+        for line in memo:
+            print(line)
 
     return memo[0][0]
 
