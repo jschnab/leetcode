@@ -1,5 +1,5 @@
 """
-leetcode 2261: Minimum consecutive cards to pick up.
+leetcode 2260: Minimum consecutive cards to pick up.
 
 You are given an integer array A where A[i] represents the value of the ith
 card. A pair of cards are matching if the cards have the same value.

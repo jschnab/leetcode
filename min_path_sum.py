@@ -4,15 +4,17 @@
 # a dynamic-programming approach is not too difficult
 
 def minPathSum(grid):
-    """Get the minimum sum of values along the path from top left
+    """
+    Get the minimum sum of values along the path from top left
     to bottom right of a grid. Allowed movements are only step right
-    of step down."""
+    of step down.
+    """
 
     m = len(grid)
     n = len(grid[0])
 
     memo = [[0] * n for _ in range(m)]
-    
+
     # initialize memo
     memo[0][0] = grid[0][0]
 
