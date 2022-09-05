@@ -1,3 +1,6 @@
+from collections import deque
+
+
 class Node:
     def __init__(self, val=None, par=None, left=None, right=None):
         self.val = val
@@ -120,6 +123,26 @@ class Tree:
         helper(node)
         return d
 
+    def width(self, root=None):
+        """
+        Maximum number of nodes across all depths of the tree.
+        """
+        root = root or self.root
+        if root is None:
+            return 0
+        max_width = 0
+        q = deque([root])
+        while len(q) > 0:
+            width = len(q)
+            max_width = max(max_width, width)
+            for _ in range(width):
+                node = q.pop()
+                if node.left is not None:
+                    q.appendleft(node.left)
+                if node.right is not None:
+                    q.appendleft(node.right)
+        return max_width
+
     def successor(self, node):
         """
         If  node has no right child but has a successor, successor is lowest
@@ -206,6 +229,26 @@ def test_successor():
     print("test successor successful")
 
 
+def test_width():
+    t = Tree()
+    assert t.width() == 0
+    t.add(4)
+    assert t.width() == 1
+    t.add(2)
+    assert t.width() == 1
+    t.add(6)
+    assert t.width() == 2
+    t.add(1)
+    assert t.width() == 2
+    t.add(5)
+    assert t.width() == 2
+    t.add(3)
+    assert t.width() == 3
+    t.add(7)
+    assert t.width() == 4
+    print("test width successful")
+
+
 def main():
     test_add()
     test_find()
@@ -213,6 +256,7 @@ def main():
     test_height()
     test_diameter()
     test_successor()
+    test_width()
 
 
 if __name__ == "__main__":
