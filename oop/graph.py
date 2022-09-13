@@ -1,4 +1,5 @@
 from collections import defaultdict, deque
+from heapq import heapify, heappop
 
 WHITE = "white"
 GRAY = "gray"
@@ -28,6 +29,7 @@ class Vertex:
         self.distance = float("inf")
         self.start = None
         self.end = None
+        self.rank = 0
 
     def __str__(self):
         return f"{self.value}"
@@ -36,19 +38,32 @@ class Vertex:
         return str(self.value)
 
     def __eq__(self, other):
-        return all(
-            [
-                self.value == other.value,
-                self.color == other.color,
-                self.parent == other.parent,
-                self.distance == other.distance,
-                self.start == other.start,
-                self.end == other.end,
-            ]
-        )
+        return self.value == other.value
 
     def __hash__(self):
         return hash(self.value)
+
+    def root(self):
+        cur = self
+        while cur is not None and cur.parent is not None:
+            cur = cur.parent
+        return cur
+
+    def find_set(self):
+        if self.parent is not self:
+            self.parent = self.parent.find_set()
+        return self.parent
+
+    def link(self, other):
+        if self.rank > other.rank:
+            other.parent = self
+        else:
+            self.parent = other
+            if self.rank == other.rank:
+                other.rank += 1
+
+    def union(self, other):
+        self.find_set().link(other.find_set())
 
 
 class Edge:
@@ -60,7 +75,7 @@ class Edge:
     def __str__(self):
         w = ""
         if self.weight is not None:
-            w = f" {self.weight}"
+            w = f"({self.weight})"
         return f"{self.src}->{self.dst}{w}"
 
     def __repr__(self):
@@ -95,6 +110,13 @@ class Graph:
     def reset_colors(self):
         for v in self.vertices:
             v.color = WHITE
+
+    def reset_ranks(self):
+        for v in self.vertices:
+            v.rank = 0
+
+    def transpose(self):
+        return Graph(self.vertices, [Edge(e.dst, e.src) for e in self.edges])
 
     def bfs(self, start, visit=lambda x: None):
         self.reset_distances()
@@ -144,18 +166,76 @@ class Graph:
         vertex.end = self.timer.time
         vertex.color = BLACK
 
+    def strongly_connected_components(self):
+        self.dfs()
+        T = self.transpose()
+        T.vertices = sorted(T.vertices, key=lambda x: x.end, reverse=True)
+        T.dfs()
+        components = defaultdict(set)
+        for v in T.vertices:
+            components[v.root()].add(v)
+        return list(components.values())
+
+    def kruskal(self):
+        for v in self.vertices:
+            v.parent = v
+        self.reset_ranks()
+        self.edges = sorted(self.edges, key=lambda x: x.weight)
+        result = []
+        for e in self.edges:
+            if e.src.find_set() != e.dst.find_set():
+                result.append(e)
+                e.src.union(e.dst)
+        return result
+
+    def prim(self, start):
+        for v in self.vertices:
+            v.rank = float("inf")
+            v.parent = None
+        start.rank = 0
+        seen = {start}
+        q = [(v.rank, i, v) for i, v in enumerate(self.vertices)]
+        heapify(q)
+        while len(q) > 0:
+            *_, cur = heappop(q)
+            seen.add(cur)
+            for edge in self[cur]:
+                if edge.dst not in seen and edge.weight < edge.dst.rank:
+                    edge.dst.parent = cur
+                    edge.dst.rank = edge.weight
+
 
 def main():
     a = Vertex("A")
     b = Vertex("B")
     c = Vertex("C")
     d = Vertex("D")
-    V = [a, b, c, d]
-    E = [Edge(a, b), Edge(a, c), Edge(c, d)]
+    e = Vertex("E")
+    f = Vertex("F")
+    g = Vertex("G")
+    h = Vertex("H")
+    i = Vertex("I")
+    V = [a, b, c, d, e, f, g, h, i]
+    E = [
+        Edge(a, b, 4),
+        Edge(a, h, 8),
+        Edge(b, c, 8),
+        Edge(b, h, 11),
+        Edge(c, d, 7),
+        Edge(c, f, 4),
+        Edge(c, i, 2),
+        Edge(d, e, 9),
+        Edge(d, f, 14),
+        Edge(e, f, 10),
+        Edge(f, g, 2),
+        Edge(g, h, 1),
+        Edge(g, i, 6),
+        Edge(h, i, 7),
+    ]
     G = Graph(V, E)
-    G.dfs()
+    G.prim(a)
     for v in G.vertices:
-        print(f"{v} {v.start} {v.end}")
+        print(v, v.parent)
 
 
 if __name__ == "__main__":
