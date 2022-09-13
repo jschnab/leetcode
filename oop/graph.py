@@ -89,6 +89,7 @@ class Graph:
         self.adjacent = defaultdict(set)
         for e in edges:
             self.adjacent[e.src].add(e)
+        self.topo_sorted = []
 
     def __getitem__(self, item):
         return self.adjacent[item]
@@ -118,6 +119,12 @@ class Graph:
     def transpose(self):
         return Graph(self.vertices, [Edge(e.dst, e.src) for e in self.edges])
 
+    def zero_indegree_vertices(self):
+        result = set(self.vertices)
+        for edge in self.edges:
+            result.discard(edge.dst)
+        return result
+
     def bfs(self, start, visit=lambda x: None):
         self.reset_distances()
         self.reset_parents()
@@ -146,6 +153,7 @@ class Graph:
             print(end)
 
     def dfs(self, visit=lambda x: None):
+        self.topo_sorted = []
         self.timer = Timer()
         self.reset_parents()
         self.reset_colors()
@@ -165,6 +173,28 @@ class Graph:
         self.timer += 1
         vertex.end = self.timer.time
         vertex.color = BLACK
+        self.topo_sorted.append(vertex)
+
+    def topological_sort(self, method="tarjan"):
+        if method == "tarjan":
+            self.dfs()
+            return self.topo_sorted[::-1]
+
+        elif method == "kahn":
+            zero_indegree = self.zero_indegree_vertices()
+            rev_adjacent = defaultdict(set)
+            for vertex, edges in self.adjacent.items():
+                for e in edges:
+                    rev_adjacent[e.dst].add(e)
+            result = []
+            while len(zero_indegree) > 0:
+                cur = zero_indegree.pop()
+                result.append(cur)
+                for edge in self.adjacent[cur]:
+                    rev_adjacent[edge.dst].discard(edge)
+                    if len(rev_adjacent[edge.dst]) == 0:
+                        zero_indegree.add(edge.dst)
+            return result
 
     def strongly_connected_components(self):
         self.dfs()
@@ -206,36 +236,30 @@ class Graph:
 
 
 def main():
-    a = Vertex("A")
-    b = Vertex("B")
-    c = Vertex("C")
-    d = Vertex("D")
-    e = Vertex("E")
-    f = Vertex("F")
-    g = Vertex("G")
-    h = Vertex("H")
-    i = Vertex("I")
-    V = [a, b, c, d, e, f, g, h, i]
+    shirt = Vertex("shirt")
+    tie = Vertex("tie")
+    jacket = Vertex("jacket")
+    belt = Vertex("belt")
+    watch = Vertex("watch")
+    undershorts = Vertex("undershorts")
+    pants = Vertex("pants")
+    shoes = Vertex("shoes")
+    socks = Vertex("socks")
+    V = [shirt, tie, jacket, belt, watch, undershorts, pants, shoes, socks]
     E = [
-        Edge(a, b, 4),
-        Edge(a, h, 8),
-        Edge(b, c, 8),
-        Edge(b, h, 11),
-        Edge(c, d, 7),
-        Edge(c, f, 4),
-        Edge(c, i, 2),
-        Edge(d, e, 9),
-        Edge(d, f, 14),
-        Edge(e, f, 10),
-        Edge(f, g, 2),
-        Edge(g, h, 1),
-        Edge(g, i, 6),
-        Edge(h, i, 7),
+        Edge(shirt, tie),
+        Edge(shirt, belt),
+        Edge(tie, jacket),
+        Edge(tie, belt),
+        Edge(undershorts, pants),
+        Edge(undershorts, shoes),
+        Edge(pants, belt),
+        Edge(pants, shoes),
+        Edge(belt, jacket),
+        Edge(socks, shoes),
     ]
     G = Graph(V, E)
-    G.prim(a)
-    for v in G.vertices:
-        print(v, v.parent)
+    print(G.topological_sort())
 
 
 if __name__ == "__main__":
