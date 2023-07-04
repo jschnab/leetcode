@@ -53,18 +53,18 @@ def unreachable(n, edges):
 
     # 'ranks' stores the rank of each set, useful for the rank heuristics
     # when finding connected components
-    ranks = [1 for i in range(n)]
+    #ranks = [1 for i in range(n)]
 
     # 2. find connected components using path compression and ranks heuristics
     for a, b in edges:
         pa = find_parent(a, parents)
         pb = find_parent(b, parents)
-        if ranks[pa] < ranks[pb]:
-            parents[pa] = pb
-        else:
-            parents[pb] = pa
-            if ranks[pa] == ranks[pb]:
-                ranks[pa] += 1
+        #if ranks[pa] < ranks[pb]:
+        parents[pa] = pb
+        #else:
+        #    parents[pb] = pa
+        #    if ranks[pa] == ranks[pb]:
+        #        ranks[pa] += 1
 
     # 3. make sure all paths are compressed
     for node in range(n):
